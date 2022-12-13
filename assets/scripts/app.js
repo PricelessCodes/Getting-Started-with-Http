@@ -47,7 +47,10 @@ function sendHttpRequest(method, url, data) {
 
     //.json() parse response from json to js objects
     // and also turns  the streamed response body in response object into a snapshot
-    return fetch(url).then(response => response.json());
+    return fetch(url, {
+        method: method,
+        body: JSON.stringify(data),
+    }).then((response) => response.json());
 }
 
 async function fetchPosts() {
@@ -56,9 +59,9 @@ async function fetchPosts() {
             "GET",
             "https://jsonplaceholder.typicode.com/posts"
         );
-    
+
         const listOfPosts = responseData;
-    
+
         for (const post of listOfPosts) {
             const postEl = document.importNode(postTemplate.content, true);
             postEl.querySelector("h2").textContent = post.title.toUpperCase();
@@ -69,7 +72,6 @@ async function fetchPosts() {
     } catch (error) {
         alert(error.message);
     }
-    
 }
 
 async function CreatePost(title, content) {
