@@ -55,9 +55,20 @@ function sendHttpRequest(method, url, data) {
         body: JSON.stringify(data),
         headers: {
             //telling the API that the data of type json
-            "Content-Type": "application/json"
-        }
-    }).then((response) => response.json());
+            "Content-Type": "application/json",
+        },
+    })
+        .then((response) => {
+            if (response.status >= 200 && response.status < 300)
+                return response.json();
+            else
+                throw new Error(
+                    "Failed to send request, try agian later"
+                );
+        })
+        .catch((error) => {
+            throw error;
+        });
 }
 
 async function fetchPosts() {
