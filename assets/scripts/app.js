@@ -5,7 +5,7 @@ const fetchButton = document.querySelector("#available-posts button");
 const postList = document.querySelector("ul");
 
 function sendHttpRequest(method, url, data) {
-    const promise = new Promise((resolve, reject) => {
+    /*const promise = new Promise((resolve, reject) => {
         // CREATE XML Http Request
         const xhr = new XMLHttpRequest();
         //CONFIQRATE REQUEST
@@ -41,9 +41,13 @@ function sendHttpRequest(method, url, data) {
 
         //SEND REQUEST
         xhr.send(JSON.stringify(data));
-    });
+    }); 
 
-    return promise;
+    return promise;*/
+
+    //.json() parse response from json to js objects
+    // and also turns  the streamed response body in response object into a snapshot
+    return fetch(url).then(response => response.json());
 }
 
 async function fetchPosts() {
