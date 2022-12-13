@@ -8,6 +8,9 @@ function sendHttpRequest(method, url, data) {
     /*const promise = new Promise((resolve, reject) => {
         // CREATE XML Http Request
         const xhr = new XMLHttpRequest();
+        //to set header data, once u add on u can not delete it
+        //xhr.setRequestHeader(name, value);
+        xhr.setRequestHeader("Content-Type", "application/json");
         //CONFIQRATE REQUEST
         xhr.open(method, url);
 
@@ -50,6 +53,10 @@ function sendHttpRequest(method, url, data) {
     return fetch(url, {
         method: method,
         body: JSON.stringify(data),
+        headers: {
+            //telling the API that the data of type json
+            "Content-Type": "application/json"
+        }
     }).then((response) => response.json());
 }
 
