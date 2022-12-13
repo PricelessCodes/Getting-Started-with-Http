@@ -22,7 +22,21 @@ function sendHttpRequest(method, url, data) {
             //xhr.response Return JSON data so we need to parse it
             // a better way than parsing is to use response type equal to json
 
-            resolve(xhr.response);
+            if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.response);
+            else
+                reject(
+                    new Error(
+                        "Failed to send request, try agian later"
+                    )
+                );
+        };
+
+        xhr.onerror = function () {
+            reject(
+                new Error(
+                    "Failed to send request, check ur internet connection"
+                )
+            );
         };
 
         //SEND REQUEST
@@ -33,20 +47,25 @@ function sendHttpRequest(method, url, data) {
 }
 
 async function fetchPosts() {
-    const responseData = await sendHttpRequest(
-        "GET",
-        "https://jsonplaceholder.typicode.com/posts"
-    );
-
-    const listOfPosts = responseData;
-
-    for (const post of listOfPosts) {
-        const postEl = document.importNode(postTemplate.content, true);
-        postEl.querySelector("h2").textContent = post.title.toUpperCase();
-        postEl.querySelector("p").textContent = post.body;
-        postEl.querySelector("li").id = post.id;
-        listElement.append(postEl);
+    try {
+        const responseData = await sendHttpRequest(
+            "GET",
+            "https://jsonplaceholder.typicode.com/posts"
+        );
+    
+        const listOfPosts = responseData;
+    
+        for (const post of listOfPosts) {
+            const postEl = document.importNode(postTemplate.content, true);
+            postEl.querySelector("h2").textContent = post.title.toUpperCase();
+            postEl.querySelector("p").textContent = post.body;
+            postEl.querySelector("li").id = post.id;
+            listElement.append(postEl);
+        }
+    } catch (error) {
+        alert(error.message);
     }
+    
 }
 
 async function CreatePost(title, content) {
@@ -73,7 +92,10 @@ form.addEventListener("submit", (event) => {
 postList.addEventListener("click", (event) => {
     if (event.target.tagName === "BUTTON") {
         const post = event.target.closest("li");
-        sendHttpRequest("DELETE", `https://jsonplaceholder.typicode.com/posts/${post.id}`);
+        sendHttpRequest(
+            "DELETE",
+            `https://jsonplaceholder.typicode.com/posts/${post.id}`
+        );
         postList.removeChild(post);
     }
 });
